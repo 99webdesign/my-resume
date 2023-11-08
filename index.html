@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Builder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        input[type="text"],
+        input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .experience, .education {
+            display: none;
+        }
+        table {
+            width: 100%;
+        }
+        table, th, td {
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Resume Builder</h1>
+        <div class="section">
+            <h2>Personal Details</h2>
+            <form id="personalForm">
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" required>
+                <label for="email">Email:</label>
+                <input type="text" id="email" required>
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" required>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2>Experience</h2>
+            <button id="addExperience">Add Experience</button>
+            <div class="experience" id="experience">
+                <table>
+                    <tr>
+                        <th>Company Name</th>
+                        <th>Working From</th>
+                        <th>Ending Date</th>
+                        <th>Position</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Education</h2>
+            <button id="addEducation">Add Education</button>
+            <div class="education" id="education">
+                <table>
+                    <tr>
+                        <th>Course Name</th>
+                        <th>Passing Year</th>
+                        <th>Grade</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <button id="generateResume">Generate Resume</button>
+
+        <div id="resumeOutput">
+            <h2>Generated Resume</h2>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("addExperience").addEventListener("click", function() {
+            document.querySelector(".experience").style.display = "block";
+            var experienceTable = document.querySelector(".experience table");
+            experienceTable.insertRow(-1).innerHTML = '<td><input type="text" name="companyName"></td><td><input type="date" name="workingFrom"></td><td><input type="date" name="endingDate"></td><td><input type="text" name="position"></td>';
+        });
+
+        document.getElementById("addEducation").addEventListener("click", function() {
+            document.querySelector(".education").style.display = "block";
+            var educationTable = document.querySelector(".education table");
+            educationTable.insertRow(-1).innerHTML = '<td><input type="text" name="courseName"></td><td><input type="text" name="passingYear"></td><td><input type="text" name="grade"></td>';
+        });
+
+        document.getElementById("generateResume").addEventListener("click", function() {
+            var fullName = document.getElementById("fullName").value;
+            var email = document.getElementById("email").value;
+            var phone = document.getElementById("phone").value;
+            var experienceRows = document.querySelectorAll(".experience table tr");
+            var educationRows = document.querySelectorAll(".education table tr");
+
+            var resumeHTML = `<h2>${fullName}</h2>`;
+            resumeHTML += `<p>Email: ${email}</p>`;
+            resumeHTML += `<p>Phone: ${phone}</p>`;
+
+            if (experienceRows.length > 1) {
+                resumeHTML += "<h3>Experience</h3>";
+                for (var i = 1; i < experienceRows.length; i++) {
+                    var cells = experienceRows[i].getElementsByTagName("td");
+                    var companyName = cells[0].getElementsByTagName("input")[0].value;
+                    var workingFrom = cells[1].getElementsByTagName("input")[0].value;
+                    var endingDate = cells[2].getElementsByTagName("input")[0].value;
+                    var position = cells[3].getElementsByTagName("input")[0].value;
+                    resumeHTML += `<p><strong>${companyName}</strong> (${workingFrom} - ${endingDate})<br>${position}</p>`;
+                }
+            }
+
+            if (educationRows.length > 1) {
+                resumeHTML += "<h3>Education</h3>";
+                for (var i = 1; i < educationRows.length; i++) {
+                    var cells = educationRows[i].getElementsByTagName("td");
+                    var courseName = cells[0].getElementsByTagName("input")[0].value;
+                    var passingYear = cells[1].getElementsByTagName("input")[0].value;
+                    var grade = cells[2].getElementsByTagName("input")[0].value;
+                    resumeHTML += `<p><strong>${courseName}</strong> (${passingYear})<br>Grade: ${grade}</p>`;
+                }
+            }
+
+            document.getElementById("resumeOutput").innerHTML = resumeHTML;
+        });
+    </script>
+</body>
+</html>
